@@ -1,0 +1,71 @@
+
+analysis_set
+	-- description of a grouping used to create an otu set (run cluster otus)
+	set_id
+	description
+
+
+set_sample link
+    set_id
+    sample_id
+
+sample
+    sample_id
+    strain
+    sex
+    cage
+    time	- sample acquisition time?
+    condition1	- separate condition table if <> 3 ?
+    condition2
+    condition3
+
+
+otu_seq
+    set_id
+    otu_id
+    seq_length
+    method	- pipeline/tool name, pipeline date/version ?
+
+
+otu_annotation
+	*annot_id int
+	set_id int
+	otu_id int
+	phylum varchar(100)
+	order varchar(100)
+	class varchar(100)
+	family varchar(100)
+	genus varchar(100)
+	species varchar(100)
+	method varchar(1000)
+- classification technique, software name, software version
+
+
+otu_counts
+	*counts_id int
+	set_id int
+	otu_id int
+	sample_id int
+	counts int
+	percent_abundance decimal(6,3)
+	method varchar(1000)
+
+
+otu xref
+	set_id_1 int
+	set_id_2 int
+	otu_id_1 int
+	otu_id_2 int
+	method varchar(1000)
+
+
+Papers:
+IMNGS: A comprehensive open resource of processed 16S rRNA microbial profiles for ecology and diversity studies 
+https://www.imngs.org/static/files/imngsPublication.pdf
+https://www.imngs.org/
+
+
+ARB
+http://www.arb-home.de/ and http://download. arb-home.de/documentation/The ARB- Project.pdf 
+has probe search features that may be useful for targeted assay development
+
