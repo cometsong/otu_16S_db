@@ -1,2 +1,2 @@
 # to setup venv
-python -m venv --prompt 'otu_db' .
+python3 -m venv --prompt 'otu_db' .
