@@ -3,10 +3,13 @@ try:
 except ImportError:
     raise
 
+# get __version__
+exec(open('otudb/__init__.py').read())
+
 setup(
     name='otu_db',
     description='Store results of 16S OTU clusters in database to track and compare and analyze.',
-    version='0.1.0',
+    version=__version__,
     author='Benjamin (cometsong)',
     license='Apache License 2.0',
     url='https://github.com/cometsong/otu_db/',
