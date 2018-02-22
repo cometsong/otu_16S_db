@@ -36,7 +36,7 @@ def read_fasta_file(filename):
         fh = open(filename, 'rU')
         return read_file_groups_with_headers(fh)
     except Exception as e:
-        log.exception('Error reading CSV file %s, %s', self.filename, str(e))
+        log.exception('Error reading fasta file %s, %s', self.filename, str(e))
         raise e
 
 
