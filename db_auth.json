@@ -1,0 +1,10 @@
+{
+	"dbtype": "mysql://",
+	"host": "",
+	"port": "",
+	"database": "",
+	"user": "",
+	"password": "",
+  "charset": "utf8mb4",
+  "unix_socket": "True"
+}
