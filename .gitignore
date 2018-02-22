@@ -68,3 +68,4 @@ pyvenv.cfg
 # project-specific
 import_data
 .pytest_cache
+db_auth.json
