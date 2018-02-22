@@ -3,7 +3,6 @@ from pprint import pprint
 import attr
 
 from playhouse.db_url import connect as db_connect
-from playhouse.dataset import DataSet
 from playhouse.reflection import Introspector
 
 from munch import Munch
