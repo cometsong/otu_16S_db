@@ -1,5 +1,5 @@
 pytest>=3.4.0
 attrs>=17.4.0
 clize>=4.0.3
-SQLAlchemy>=1.2.2
+peewee>=3.0.19
 PyMySQL>=0.8.0
