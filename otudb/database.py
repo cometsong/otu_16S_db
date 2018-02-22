@@ -8,8 +8,8 @@ from playhouse.reflection import Introspector
 
 from munch import Munch
 
-from utils import log_it, now
-from db_config import db_config
+from .utils import log_it, now
+from .db_config import db_config
 
 log = log_it(logname='otudb.database')
 
