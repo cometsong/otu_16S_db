@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from ..parser import CSVParser
+from ..parsers import CSVParser
 
 
 class TestCSV(object):
@@ -15,21 +15,22 @@ class TestCSV(object):
         filename = os.path.join(tmpdir, self.csv_file)
         csvp = CSVParser(filename) 
 
+        # action!
         yield csvp
 
         # teardown
-        csvp.csvfh.close()
         csvp = None
 
 
     def test_csvfh(self, csvp):
-        assert os.path.exists(csvp.csvfh.name) == True
+        assert os.path.exists(csvp._fh.name) == True
 
 
     def test_write(self, csvp):
         vals = [{'a': 1, 'b': 2},
                 {'a': 3, 'b': 4}]
-        assert csvp.write(values=vals)
+        heads = tuple(vals[0].keys())
+        assert csvp.write(headers=heads, values=vals)
 
 
     def test_load(self, csvp):
