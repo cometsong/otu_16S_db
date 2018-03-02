@@ -27,7 +27,7 @@ class FastaParser(TextParser):
         """Group the file into chunks by lines matching header values"""
         # Modified from https://drj11.wordpress.com/2010/02/22/python-getting-fasta-with-itertools-groupby/ 
         f = self._fh
-        for header,group in itertools.groupby(f, self.is_fasta_header):
+        for header,group in groupby(f, self.is_fasta_header):
             if header:
                 line = group.next()
                 header_value = group.next()[1:].strip()
@@ -44,9 +44,16 @@ class FastaParser(TextParser):
             raise e
 
 
-    def write_seq(self, bases):
-        """write all sequence bases to filename
+    def write_header(self, header: str):
+        if header[0] != self.lead_character:
+            header = self.lead_character + header
+        return self.write_row(header)
+
+
+    def write_seqs(self, bases):
+        """Write all sequence bases to filename.
         'bases' can str or list
+        if str, will be split into sections of 'line_width' length
         """
         seqs = []
         if not bases:
@@ -59,6 +66,7 @@ class FastaParser(TextParser):
         elif isinstance(bases, list):
             seqs = bases
         else:
+            seqs = [bases]
 
-        return self.write(self, headers=None, values=[seqs], delimiter=None)
+        return self.write(headers=None, values=seqs, delimiter=None)
 

@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from ..parsers import CSVParser
+from ..parsers import CSVParser, FastaParser
 
 
 class TestCSV(object):
@@ -39,4 +39,45 @@ class TestCSV(object):
         for row1 in loaded:
             assert row1 == {'a': 1, 'b': 2}
             break
+
+
+class TestFasta(object):
+    """test CSVParser"""
+
+    filename = 'test_tmpfile.fasta'
+
+    @pytest.fixture
+    def fp(self, tmpdir):
+        # setup
+        filename = os.path.join(tmpdir, self.filename)
+        fp = FastaParser(filename) 
+
+        # action!
+        yield fp
+
+        # teardown
+        fp = None
+
+
+    def test_fh_exists(self, fp):
+        assert os.path.exists(fp._fh.name) == True
+
+
+    def test_write_header(self, fp):
+        header = '>head'
+        assert fp.write_header(header)
+
+
+    def test_write_seqs(self, fp):
+        base_seq = ['ACGT','TCGA']
+        assert fp.write_seqs(base_seq)
+
+
+    def test_load(self, fp):
+        """test first row loaded from fp"""
+        loaded = fp.load_data()
+        for row1 in loaded:
+            assert row1 == ('>head', 'ACGTTCGA')
+            break
+
 
