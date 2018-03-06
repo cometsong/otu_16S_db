@@ -52,14 +52,17 @@ def fasta_import(filepath):
     try:
         fp = FastaParser(filepath, mode='r')
         seq_table = tables.models.otu_seq
+        row_count = 0
         # fields = [seq_table.otu_name, seq_table.sequence, seq_table.sequence]
         with otudb.transaction():
             for head, seq in fp.load_data():
+                row_count+=1
                 log.info('Importing: %s',head)
                 res = seq_table.create(otu_name=head,
                                        sequence=seq,
                                        seq_length=len(seq)
                                       )
+        log.info('Completed importing %s rows from: %s', row_count, filepath)
     except Exception as e:
         log.error(f'Whoops while importing {filepath}.')
         raise e
