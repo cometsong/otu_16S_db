@@ -29,8 +29,7 @@ class FastaParser(TextParser):
         f = self._fh
         for header,group in groupby(f, self.is_fasta_header):
             if header:
-                line = group.next()
-                header_value = group.next()[1:].strip()
+                header_value = group.__next__()[1:].strip()
             else:
                 sequence = ''.join(line.strip() for line in group)
                 yield header_value, sequence
