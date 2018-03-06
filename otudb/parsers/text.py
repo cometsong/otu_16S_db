@@ -1,3 +1,4 @@
+import os
 import attr
 
 from ..utils import log_it, now
@@ -26,24 +27,17 @@ class TextParser(object):
         """
         try:
             _fh = open(self.filename, self.mode)
-            log.debug(f'{self.filename} is open using mode "{self.mode}".')
-            return _fh
+        except FileNotFoundError as e:
+            log.exception(f'File does not exist: {self.filename}.')
+            self.mode = 'w+'
+            _fh = open(self.filename, self.mode)
+            log.info(f'{self.filename} is open using mode "{self.mode}".')
         except Exception as e:
-            log.exception(f'There is a problem opening file: {self.filename} using mode "{self.mode}".')
-
-            try:
-                _fh = open(self.filename, 'w+')
-                log.debug(f'{self.filename} is open and read/writable.')
-                return _fh
-            except:
-
-                try:
-                    _fh = open(self.filename, 'r')
-                    log.debug(f'{self.filename} is open and read-only.')
-                    return _fh
-                except Exception as e:
-                    log.exception(f'There is a problem opening file: {self.filename}')
-                    raise e
+            log.exception(f'There is a problem opening file: {self.filename}.')
+            return e
+        else:
+            log.info(f'{self.filename} is open using mode "{self.mode}".')
+            return _fh
 
 
     def open_file(self, filename: str=None, mode=None):
