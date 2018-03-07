@@ -13,9 +13,10 @@ class TextParser(object):
     filename: str = attr.ib()
     mode: str = attr.ib(default='w+')
     headers: list = attr.ib(init=False, default='[]')
-    _fh = attr.ib(init=False)
+    newline: str = attr.ib(init=False, default='')
+    fh = attr.ib(init=False)
 
-    @_fh.default
+    @fh.default
     def get_fh(self):
         return self.open_file()
 
@@ -26,18 +27,18 @@ class TextParser(object):
         Return file object handle.
         """
         try:
-            _fh = open(self.filename, self.mode)
+            fh = open(self.filename, self.mode, newline=self.newline)
         except FileNotFoundError as e:
             log.exception(f'File does not exist: {self.filename}.')
             self.mode = 'w+'
-            _fh = open(self.filename, self.mode)
+            fh = open(self.filename, self.mode, newline=self.newline)
             log.info(f'{self.filename} is open using mode "{self.mode}".')
         except Exception as e:
             log.exception(f'There is a problem opening file: {self.filename}.')
             return e
         else:
             log.info(f'{self.filename} is open using mode "{self.mode}".')
-            return _fh
+            return fh
 
 
     def open_file(self, filename: str=None, mode=None):
@@ -51,7 +52,7 @@ class TextParser(object):
         """yield rows from file using readline"""
         log.info(f'Loading rows from {self.filename}')
         try:
-            for row in self._fh:
+            for row in self.fh:
                 yield row
         except Exception as e:
             log.exception(f'Reading file {self.filename}: {e!s}')
@@ -67,7 +68,7 @@ class TextParser(object):
         try:
             # log.info(f'Writing row to {self.filename}')
             log.debug(f'Contents of row: {row!s}')
-            return self._fh.write(row)
+            return self.fh.write(row)
         except IOError as e:
             log.exception(f'Error writing row to file, {e!s}')
             raise e

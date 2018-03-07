@@ -24,12 +24,29 @@ class CSVParser(TextParser):
         return self.sniff_dialect()
 
 
+    def fieldnames(self):
+        try:
+            if self.fh.readable():
+                cr = csv.DictReader(self.fh, delimiter=self.delimiter, quotechar=self.quotechar)
+                self.fieldnames = cr.fieldnames
+                log.info(f'fieldnames in {self.filename} retrieved.')
+                return self.fieldnames
+            else:
+                log.info(f'fieldnames in {self.filename} not readable.')
+                return []
+        except Exception as e:
+            log.exception(f'Reading CSV file {self.filename} cannot get fieldnames: {e!s}')
+            raise e
+        finally:
+            self.fh.seek(0)
+
+
     def load_data(self):
         """yield row dicts from csv file using DictReader"""
         log.info(f'Loading rows from {self.filename}')
         self.dialect = self.dialect if self.dialect else self.sniff_dialect()
         try:
-            reader = csv.DictReader(self._fh,
+            reader = csv.DictReader(self.fh,
                                     dialect=self.dialect,
                                     delimiter=self.delimiter,
                                     quotechar=self.quotechar)
@@ -42,10 +59,12 @@ class CSVParser(TextParser):
     def sniff_dialect(self):
         """find the line/ending type using csv.sniffer"""
         try:
-            return csv.Sniffer().sniff(self._fh.read(1024))
+            return csv.Sniffer().sniff(self.fh.read(1024))
         except Exception as e:
             log.debug(f'Can\'t sniff the dialect in the file: {self.filename}')
             return None
+        finally:
+            self.fh.seek(0)
 
 
     def write(self, headers: list = [], values: list = []):
@@ -68,7 +87,7 @@ class CSVParser(TextParser):
                 self.write_headers(self.headers, self.delimiter)
 
             if values:
-                writer = csv.DictWriter(self._fh, self.headers,
+                writer = csv.DictWriter(self.fh, self.headers,
                                         dialect=dialect, extrasaction='ignore')
                 log.info(f'Writing values to {self.filename}')
                 try:

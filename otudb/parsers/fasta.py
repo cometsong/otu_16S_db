@@ -26,7 +26,7 @@ class FastaParser(TextParser):
     def read_file_groups_with_headers(self):
         """Group the file into chunks by lines matching header values"""
         # Modified from https://drj11.wordpress.com/2010/02/22/python-getting-fasta-with-itertools-groupby/ 
-        f = self._fh
+        f = self.fh
         for header,group in groupby(f, self.is_fasta_header):
             if header:
                 header_value = group.__next__()[1:].strip()
