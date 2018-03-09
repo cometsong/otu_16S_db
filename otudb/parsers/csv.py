@@ -18,13 +18,14 @@ class CSVParser(TextParser):
     dialect: str = attr.ib()
     delimiter: str = attr.ib(default=',')
     quotechar: str = attr.ib(default='"')
+    fieldnames: str = attr.ib(default=None)
 
     @dialect.default
     def get_dialect(self):
         return self.sniff_dialect()
 
 
-    def fieldnames(self):
+    def get_fieldnames(self):
         try:
             if self.fh.readable():
                 cr = csv.DictReader(self.fh, delimiter=self.delimiter, quotechar=self.quotechar)
@@ -33,7 +34,7 @@ class CSVParser(TextParser):
                 return self.fieldnames
             else:
                 log.info(f'fieldnames in {self.filename} not readable.')
-                return []
+                return None
         except Exception as e:
             log.exception(f'Reading CSV file {self.filename} cannot get fieldnames: {e!s}')
             raise e
@@ -47,6 +48,7 @@ class CSVParser(TextParser):
         self.dialect = self.dialect if self.dialect else self.sniff_dialect()
         try:
             reader = csv.DictReader(self.fh,
+                                    fieldnames=self.fieldnames,
                                     dialect=self.dialect,
                                     delimiter=self.delimiter,
                                     quotechar=self.quotechar)

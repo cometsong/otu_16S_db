@@ -97,7 +97,7 @@ def count_table_import(filepath):
         tp = CSVParser(filepath, mode='r', delimiter='\t')
         counts = tables.models.otu_counts
         sample_info = tables.models.sample_info
-        sample_names = tp.fieldnames()[1:] # first field is OTUId
+        sample_names = tp.get_fieldnames()[1:] # first field is OTUId
         log.info(f'{tp.filename} sample list: {sample_names}')
         with otudb.transaction():
             row_count = 0
