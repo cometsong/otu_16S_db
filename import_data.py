@@ -12,21 +12,22 @@ from otudb.utils import log_it
 log = log_it(logname='import_data')
 
 otu_data_file_imports = {
-    # otu_counts
-    # This file contains the percent_abundance
-    'otu_table': ['OTUId', 'sample_id', '*sample_id'], # , sample_id, sample_id, ... 
-
-    # otu_annotation
-    'otu_taxa_rdp': ['otu_name', 'domain', 'phylum', 'class', 'order', 'family', 'genus'], # otu_name header empty!
-
-    # otu_seqs
-    'otu_seq_fasta': [], # standard FASTA format
+    # sample_info
+    'sample_info': ['sample_name', 'sample_type', 'sex', 'cage', 'time', 'conditions'],
 
     # analysis_sets
     'analysis_sets': ['set_name', 'desc'], # TODO: this file will need to be created by end user, or parsed from others?
 
-    # sample_info
-    'sample_info': ['sample_name', 'sample_type', 'sex', 'cage', 'time', 'conditions'],
+    # otu_seqs
+    'otu_seq_fasta': [], # standard FASTA format
+
+    # otu_annotation, RDP format. otu_name header empty!
+    'otu_taxa_rdp': ['otu_name', 'phylum', 'class', 'order', 'family', 'genus'],
+    # otu_annotation, GreenGenes format. NO header line! taxa field is ;-delimited
+    'otu_taxa_gg': ['otu_name', 'percent_identity', 'p_value', 'k__domain; p__phylum; c__class; o__order; f__family; g__genus; s__species'],
+
+    # otu_counts: filename 'otu_table.tsv' contains the read count of each pair
+    'otu_table': ['OTUId', 'sample_id', '*sample_id'], # , sample_id, sample_id, ... 
 }
 
 
