@@ -122,21 +122,29 @@ def count_table_import(filepath):
         raise e
 
 
-def taxa_import_rdp(filehandle):
+def taxa_import_rdp(filepath):
     """import a taxa annotation file into the db"""
     log.info('Importing RDP taxonomy.')
+    fieldnames = otu_data_file_imports['otu_taxa_rdp']
     try:
-        pass
+        tp = CSVParser(filepath, mode='r', delimiter='\t', fieldnames=fieldnames)
+        with otudb.transaction():
+            for row in tp.load_data():
+                pass
     except Exception as e:
         log.error(f'Whoops while importing {filepath} in RDP format.')
         raise e
 
 
-def taxa_import_gg(filehandle):
+def taxa_import_gg(filepath):
     """import a taxa annotation file into the db"""
     log.info('Importing GreenGenes taxonomy.')
+    fieldnames = otu_data_file_imports['otu_taxa_gg']
     try:
-        pass
+        tp = CSVParser(filepath, mode='r', delimiter='\t', fieldnames=fieldnames)
+        with otudb.transaction():
+            for row in tp.load_data():
+                pass
     except Exception as e:
         log.error(f'Whoops while importing {filepath} in GG format.')
         raise e
@@ -147,16 +155,13 @@ def taxa_import(filepath):
     """import a taxa annotation file into the db"""
     log.info('Starting to import taxonomy annotations.')
     try:
-        tp = CSVParser(filepath, mode='r', delimiter='\t')
-        with otudb.transaction():
-            for row in tp.load_data():
-                log.info('Determing Taxa file source...')
-                if 'k_' in row.values():
-                    tp.seek(0) #reset file
-                    taxa_import_gg(tp)
-                else:
-                    tp.seek(0) #reset file
-                    taxa_import_rdp(tp)
+        fh = open(filepath, mode='r')
+        line = fh.readline()
+        log.info('Determing Taxa file source...')
+        if 'k__' in line:
+            return taxa_import_gg(filepath)
+        else:
+            return taxa_import_rdp(filepath)
     except Exception as e:
         log.error(f'Whoops while importing {filepath}.')
         raise e
