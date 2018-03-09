@@ -6,7 +6,7 @@ from .text import TextParser
 from ..utils import log_it, now
 
 
-log = log_it(logname='otudb.parser')
+log = log_it(logname='parser.fasta')
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Classes ~~~~~

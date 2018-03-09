@@ -4,7 +4,7 @@ import attr
 from ..utils import log_it, now
 
 
-log = log_it(logname='otudb.parser')
+log = log_it(logname='parser.textfile')
 
 
 @attr.s
